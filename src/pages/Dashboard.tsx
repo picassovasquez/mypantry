@@ -2,8 +2,10 @@ import { useMemo } from 'react'
 import { Package, AlertTriangle, ShoppingCart, Clock } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { InventoryTable } from '@/components/inventory/InventoryTable'
+import { AddItemDialog } from '@/components/inventory/AddItemDialog'
+import { VoiceAddDialog } from '@/components/inventory/VoiceAddDialog'
 import { getItemStatus } from '@/types'
-import { mockItems } from '@/lib/mockData'
+import { useInventoryStore } from '@/lib/store'
 
 function MetricCard({
   title, value, icon: Icon, description,
@@ -28,7 +30,7 @@ function MetricCard({
 }
 
 export function Dashboard() {
-  const items = mockItems
+  const items = useInventoryStore((s) => s.items)
 
   const metrics = useMemo(() => {
     const today = new Date().toISOString().split('T')[0]
@@ -80,11 +82,15 @@ export function Dashboard() {
 
       {/* Inventory table */}
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="flex items-center gap-2">
             <Package className="h-4 w-4" />
             Inventory
           </CardTitle>
+          <div className="flex gap-2">
+            <VoiceAddDialog />
+            <AddItemDialog />
+          </div>
         </CardHeader>
         <CardContent>
           <InventoryTable items={items} />
